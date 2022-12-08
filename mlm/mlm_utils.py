@@ -51,18 +51,18 @@ class CorpusMaskingDataset(Dataset):
                                                     truncation=True, return_tensors="pt")
             groundtruth_sequence_tokens = self.tokenizer(groundtruth_sequence, padding='max_length', max_length=self.sequence_length,
                                                             truncation=True, return_tensors="pt")
-            for key in masked_sequence_tokens.keys():
-                masked_sequence_tokens[key] = masked_sequence_tokens[key].squeeze(0)
-            for key in groundtruth_sequence_tokens.keys():
-                groundtruth_sequence_tokens[key] = groundtruth_sequence_tokens[key].squeeze(0)
+            # for key in masked_sequence_tokens.keys():
+            #     masked_sequence_tokens[key] = masked_sequence_tokens[key].squeeze(0)
+            # for key in groundtruth_sequence_tokens.keys():
+            #     groundtruth_sequence_tokens[key] = groundtruth_sequence_tokens[key].squeeze(0)
             return masked_sequence_tokens, groundtruth_sequence_tokens
         else: # We need to mask the sentence
             sequence = self.data.iloc[index][0]
             groundtruth_sequence_tokens = self.tokenizer(sequence, padding='max_length', max_length=self.sequence_length,
                                                     truncation=True, return_tensors="pt")
-            for key in groundtruth_sequence_tokens.keys(): 
-                # delete the first dim of tensor (i.e. (1, N) -> (N)
-                groundtruth_sequence_tokens[key] = groundtruth_sequence_tokens[key].squeeze(0)
+            # for key in groundtruth_sequence_tokens.keys(): 
+            #     # delete the first dim of tensor (i.e. (1, N) -> (N)
+            #     groundtruth_sequence_tokens[key] = groundtruth_sequence_tokens[key].squeeze(0)
             # clone input ids tensor (dont want to overwrite our ground truth input ids)
             masked_sequence_tokens = copy.deepcopy(groundtruth_sequence_tokens) # copy dict and replace input ids
             
