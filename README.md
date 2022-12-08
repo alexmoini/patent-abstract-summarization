@@ -98,6 +98,13 @@ CSV file with heading: {index}, description, abstract
 - inference-hardware: type of inference hardware to use that is available on your machine (gpu, mps or cpu compatible)
 - path-to-data: path to data to transform
 
+Recommended Model Names:
+facebook/bart-base -> Will have decent performance on summarizing basic language
+facebook/bart-large-cnn -> Will have good performance on news article summarization
+
+alex-moini/bart-base-patent-summarization-no-pretrained-2022-11-5 -> Will have good performance on summarizing patents 
+- (this was the model trained by these scripts)
+
 #### EXPECTED DATA INPUT: 
 JSON file with a single field, text, with the relevant text to summarize
 
