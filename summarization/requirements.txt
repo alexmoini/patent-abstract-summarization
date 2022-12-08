@@ -1,0 +1,9 @@
+torch
+transformers
+dagshub
+pytorch-lightning
+pandas
+s3fs
+boto3
+torchmetrics
+nltk
