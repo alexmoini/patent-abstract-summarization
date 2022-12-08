@@ -1,0 +1,17 @@
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - pip
+  - pip:
+    - torch
+    - transformers
+    - dagshub
+    - pytorch-lightning
+    - pandas
+    - s3fs
+    - boto3
+    - torchmetrics
+    - nltk
