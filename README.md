@@ -23,22 +23,22 @@ This software can be used to train transformers on masked language modeling and 
                        [--masked-lm-prob MASKED_LM_PROB] 
                        [--pre-masked PRE_MASKED]
 
-    - model-architecture: HF Hub model architecture
-    - model-dir: pytorch state dict checkpoint file
-    - train: path to train data
-    - eval: path to eval data
-    - output-dir: path to desired output directory
-    - logs-dir: path to desired log directory
-    - batch-size: num samples per train batch
-    - num-epochs: number of epochs to run training for
-    - learning-rate: weight adjustment rate
-    - num-workers: cpu workers for loading data
-    - gpus: num gpus to use
-    - hardware: gpu type or cpu (mps, gpu, cpu)
-    - max-seq-length: length of input sequence desired max
-    - seed: randomization seeding for reproducibility
-    - masked-lm-prob: percentage of tokens to mask per input sequence
-    - pre-masked: if your data is premasked mark this true
+- model-architecture: HF Hub model architecture
+- model-dir: pytorch state dict checkpoint file
+- train: path to train data
+- eval: path to eval data
+- output-dir: path to desired output directory
+- logs-dir: path to desired log directory
+- batch-size: num samples per train batch
+- num-epochs: number of epochs to run training for
+- learning-rate: weight adjustment rate
+- num-workers: cpu workers for loading data
+- gpus: num gpus to use
+- hardware: gpu type or cpu (mps, gpu, cpu)
+- max-seq-length: length of input sequence desired max
+- seed: randomization seeding for reproducibility
+- masked-lm-prob: percentage of tokens to mask per input sequence
+- pre-masked: if your data is premasked mark this true
 
 #### EXPECTED DATA INPUT: 
 Text file with samples separated by newline separator
