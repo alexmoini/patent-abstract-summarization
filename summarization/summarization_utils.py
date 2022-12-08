@@ -29,8 +29,8 @@ class SummarizationDataModule(torch.utils.data.Dataset):
         encoding['labels'] = self.tokenizer(label, truncation=True, padding='max_length',
                                             max_length=self.max_length, return_tensors='pt')['input_ids']
         
-        for key in encoding.keys():
-            encoding[key] = encoding[key].squeeze(0)
+        # for key in encoding.keys():
+        #     encoding[key] = encoding[key].squeeze(0)
         return encoding
     def __len__(self):
         """

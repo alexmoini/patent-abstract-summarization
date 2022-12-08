@@ -65,14 +65,14 @@ class TestSummarizationModel(unittest.TestCase):
         self.tokenizer = transformers.AutoTokenizer.from_pretrained('facebook/bart-large-cnn')
         self.max_length = 1024
         self.dataset_path = 'summarization_test_data/unittest_data'
-        self.data = SummarizationDataModule(self.dataset_path, self.tokenizer, self.max_length, '')
+        self.data = SummarizationDataModule(self.dataset_path, self.tokenizer, self.max_length)
         self.model = SummarizationModel('facebook/bart-large-cnn')
     def test_forward(self):
         """
         Test that the forward function returns a dictionary with the correct keys
         """
         item = self.data[0]
-        output = self.model(item['input_ids'], item['attention_mask'], item['labels'])
+        output = self.model(item['input_ids'], item['attention_mask'], labels=item['labels'])
         self.assertIsInstance(output['loss'], torch.Tensor)
         self.assertIsInstance(output['logits'], torch.Tensor)
     def test_training_step(self):
@@ -116,13 +116,13 @@ class TestSummarizationModel(unittest.TestCase):
         self.model.save_model('summarization_test_data/test_model')
         self.bart = SummarizationModel('facebook/bart-large-cnn', 
                                        checkpoint_dir='summarization_test_data/test_model')
-    def tearDown(self):
-        """
-        Clean up after the test case
-        """
-        # open summarization_test_data and delete all files but keep the directory
-        for file in os.listdir('summarization_test_data'):
-                os.remove(os.path.join('summarization_test_data', file))
+    # def tearDown(self):
+    #     """
+    #     Clean up after the test case
+    #     """
+    #     # open summarization_test_data and delete all files but keep the directory
+    #     for file in os.listdir('summarization_test_data'):
+    #             os.remove(os.path.join('summarization_test_data', file))
 
 
 if __name__ == '__main__':
