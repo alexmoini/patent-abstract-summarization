@@ -9,11 +9,13 @@ from torchmetrics.text.rouge import ROUGEScore
 logging.set_verbosity_info()
 logger = logging.get_logger("transformers")
 
+
 class SummarizationModel(pl.LightningModule):
     """
 
     """
-    def __init__(self, model_architecture, checkpoint_dir=None, learning_rate=1e-4, loss=torch.nn.CrossEntropyLoss()):
+    def __init__(self, model_architecture, checkpoint_dir=None, learning_rate=1e-4, \
+                 loss=torch.nn.CrossEntropyLoss()):
         """
 
         """
@@ -39,16 +41,21 @@ class SummarizationModel(pl.LightningModule):
         torch.cuda.empty_cache()
         self.model.train()
         encoding = batch
-        model_output = self(encoding['input_ids'], encoding['attention_mask'], encoding['labels'])
+        model_output = self(encoding['input_ids'], encoding['attention_mask'], \
+                            encoding['labels'])
         loss = model_output.loss
         output_tokens = model_output.logits.argmax(dim=2)
-        output_text = self.tokenizer.batch_decode(output_tokens, skip_special_tokens=True)
-        labels_text = self.tokenizer.batch_decode(encoding['labels'], skip_special_tokens=True)
-        scores = self.rouge(output_text, labels_text)
-        self.log("train_loss", loss)
-        self.log("train_rouge1", scores['rouge1_fmeasure'])
-        self.log("train_rouge2", scores['rouge2_fmeasure'])
-        self.log("train_rougeL", scores['rougeL_fmeasure'])
+
+        output_text = self.tokenizer.batch_decode(output_tokens, \
+                                                  skip_special_tokens=True)
+        labels_text = self.tokenizer.batch_decode(encoding['labels'], \
+                                                  skip_special_tokens=True)
+        # scores = self.rouge(output_text, labels_text)
+        # self.log("train_loss", loss)
+        # self.log("train_rouge1", scores['rouge1_fmeasure'])
+        # self.log("train_rouge2", scores['rouge2_fmeasure'])
+        # self.log("train_rougeL", scores['rougeL_fmeasure'])
+
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -59,7 +66,8 @@ class SummarizationModel(pl.LightningModule):
         self.model.eval()
         encoding = batch
         with torch.no_grad():
-            model_output = self(encoding['input_ids'], encoding['attention_mask'], encoding['labels'])
+            model_output = self(encoding['input_ids'], encoding['attention_mask'], \
+                                encoding['labels'])
         loss = model_output.loss
         output_tokens = model_output.logits.argmax(dim=2)
         output_text = self.tokenizer.batch_decode(output_tokens, skip_special_tokens=True)
@@ -76,7 +84,8 @@ class SummarizationModel(pl.LightningModule):
         Predict the summary of the text
         """
         input_ids = self.tokenizer.encode(text, return_tensors="pt")
-        output = self.model.generate(input_ids, max_length=max_length, num_beams=beams, early_stopping=early_stopping)
+        output = self.model.generate(input_ids, max_length=max_length, num_beams=beams, \
+                                     early_stopping=early_stopping)
         return self.tokenizer.batch_decode(output[0], skip_special_tokens=True)
 
     def configure_optimizers(self):
@@ -84,7 +93,8 @@ class SummarizationModel(pl.LightningModule):
         Configure the optimizer
         """
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
-        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2)
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', \
+                                                                  factor=0.1, patience=2)
         return {
         "optimizer": optimizer,
         "lr_scheduler": {
