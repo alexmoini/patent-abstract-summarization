@@ -34,6 +34,7 @@ class SummarizationDataModule(torch.utils.data.Dataset):
 
         for key in encoding.keys():
             encoding[key] = encoding[key].squeeze(0)
+
         return encoding
     
     def __len__(self):

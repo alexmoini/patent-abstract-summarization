@@ -4,7 +4,7 @@ import transformers
 import pandas as pd
 import torchmetrics as tm
 from transformers.utils import logging
-# from torchmetrics.text.rouge import ROUGEScore
+from torchmetrics.text.rouge import ROUGEScore
 
 logging.set_verbosity_info()
 logger = logging.get_logger("transformers")
@@ -25,7 +25,7 @@ class SummarizationModel(pl.LightningModule):
             self.model.load_state_dict(torch.load(checkpoint_dir), strict=False)
         self.learning_rate = learning_rate
         self.loss = loss
-        # self.rouge = ROUGEScore()
+        self.rouge = ROUGEScore()
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(model_architecture)
 
     def forward(self, input_ids, attention_masks, labels):
@@ -45,6 +45,7 @@ class SummarizationModel(pl.LightningModule):
                             encoding['labels'])
         loss = model_output.loss
         output_tokens = model_output.logits.argmax(dim=2)
+
         output_text = self.tokenizer.batch_decode(output_tokens, \
                                                   skip_special_tokens=True)
         labels_text = self.tokenizer.batch_decode(encoding['labels'], \
@@ -54,6 +55,7 @@ class SummarizationModel(pl.LightningModule):
         # self.log("train_rouge1", scores['rouge1_fmeasure'])
         # self.log("train_rouge2", scores['rouge2_fmeasure'])
         # self.log("train_rougeL", scores['rougeL_fmeasure'])
+
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -70,11 +72,11 @@ class SummarizationModel(pl.LightningModule):
         output_tokens = model_output.logits.argmax(dim=2)
         output_text = self.tokenizer.batch_decode(output_tokens, skip_special_tokens=True)
         labels_text = self.tokenizer.batch_decode(encoding['labels'], skip_special_tokens=True)
-        # scores = self.rouge(output_text, labels_text)
-        # self.log("train_loss", loss)
-        # self.log("train_rouge1", scores['rouge1_fmeasure'])
-        # self.log("train_rouge2", scores['rouge2_fmeasure'])
-        # self.log("train_rougeL", scores['rougeL_fmeasure'])
+        scores = self.rouge(output_text, labels_text)
+        self.log("train_loss", loss)
+        self.log("train_rouge1", scores['rouge1_fmeasure'])
+        self.log("train_rouge2", scores['rouge2_fmeasure'])
+        self.log("train_rougeL", scores['rougeL_fmeasure'])
         return loss
 
     def predict(self, text, max_length=200, beams=2, early_stopping=True):

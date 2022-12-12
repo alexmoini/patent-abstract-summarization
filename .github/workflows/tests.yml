@@ -1,0 +1,62 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    
+jobs:
+  code_style:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: environment
+          environment-file: environment.yml
+      - run:  
+          cd summarization &&
+          pycodestyle $(git ls-files "*.py")
+      - run:  
+          cd mlm &&
+          pycodestyle $(git ls-files "*.py")
+      
+  unit_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with: 
+          activate-environment: environment
+          environment-file: environment.yml
+      - run:
+          cd summarization &&
+          python -m unittest summarization_unit_tests.py
+      - run:
+          cd mlm &&
+          python -m unittest mlm_unit_tests.py
+  
+  functional_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with: 
+          activate-environment: environment
+          environment-file: environment.yml
+      - run:
+          cd summarization &&
+          ./summarization_train_functional_test.sh
+      - run:
+          cd mlm &&
+          ./mlm_train_functional_test.sh
