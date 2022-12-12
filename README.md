@@ -145,7 +145,3 @@ You must upload your model to HF hub repo to do this. Unfortunately because the 
 
     print(text_out)
 
-## TODO List
-2. functional tests mlm
-3. functional tests summarization
-4. test env yaml file and github actions
